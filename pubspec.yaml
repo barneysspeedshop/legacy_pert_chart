@@ -1,9 +1,9 @@
 name: legacy_pert_chart
 description: High-performance PERT/CPM chart for Flutter. Visualize complex dependencies with automated network diagrams.
-version: 0.0.1
-homepage: https://github.com/barneysspeedshop/legacy_gantt_chart
-repository: https://github.com/barneysspeedshop/legacy_gantt_chart
-issue_tracker: https://github.com/barneysspeedshop/legacy_gantt_chart/issues
+version: 0.0.2
+homepage: https://github.com/barneysspeedshop/legacy_pert_chart
+repository: https://github.com/barneysspeedshop/legacy_pert_chart
+issue_tracker: https://github.com/barneysspeedshop/legacy_pert_chart/issues
 license: MIT
 
 environment:
