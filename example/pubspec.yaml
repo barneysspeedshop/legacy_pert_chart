@@ -1,0 +1,29 @@
+name: example
+description: "A new Flutter project."
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.10.4
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.8
+  legacy_pert_chart:
+    path: ../
+  provider: ^6.1.5+1
+  legacy_gantt_chart: ^7.1.1
+  legacy_timeline_scrubber: ^2.0.0
+  legacy_gantt_protocol: ^1.0.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+dependency_overrides:
+
+flutter:
+  uses-material-design: true

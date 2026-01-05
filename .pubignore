@@ -1,0 +1,26 @@
+# Standard Dart/Flutter ignores (supersedes .gitignore)
+build/
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+pubspec.lock
+
+# IDE files
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iws
+
+# Exclude platform build directories in example to keep package light
+example/android/
+example/ios/
+example/linux/
+example/macos/
+example/windows/
+example/web/
+example/build/
+
+# Exclude github workflows
+.github/
