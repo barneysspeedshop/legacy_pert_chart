@@ -50,7 +50,18 @@ class LegacyPertChartWidget extends StatefulWidget {
     this.nodeBuilder,
     this.linkColor,
     this.linkWidth,
+    this.onDependencyAdded,
+    this.onNodeTap,
   });
+
+  /// Callback when a user drags a connection from one node to another.
+  ///
+  /// * [fromId]: The ID of the source task.
+  /// * [toId]: The ID of the target task.
+  final void Function(String fromId, String toId)? onDependencyAdded;
+
+  /// Callback when a user taps on a node.
+  final void Function(LegacyPertTask task)? onNodeTap;
 
   @override
   State<LegacyPertChartWidget> createState() => _LegacyPertChartWidgetState();
@@ -59,6 +70,9 @@ class LegacyPertChartWidget extends StatefulWidget {
 class _LegacyPertChartWidgetState extends State<LegacyPertChartWidget> {
   late PertLayout _layout;
   late ({Map<String, Offset> positions, Size size}) _layoutResult;
+
+  String? _dragSourceId;
+  Offset? _dragCurrentPos;
 
   @override
   void initState() {
@@ -113,6 +127,9 @@ class _LegacyPertChartWidgetState extends State<LegacyPertChartWidget> {
                     positions: positions,
                     linkColor: effectiveLinkColor,
                     linkWidth: widget.linkWidth ?? 2.0,
+                    dragSource:
+                        _dragSourceId != null ? positions[_dragSourceId] : null,
+                    dragTarget: _dragCurrentPos,
                   ),
                 ),
               ),
@@ -129,9 +146,62 @@ class _LegacyPertChartWidgetState extends State<LegacyPertChartWidget> {
                   top: center.dy - h / 2,
                   width: w,
                   height: h,
-                  child: widget.nodeBuilder
-                          ?.call(context, task, const Size(w, h)) ??
-                      _buildDefaultNode(context, task, const Size(w, h)),
+                  child: GestureDetector(
+                    onTap: () => widget.onNodeTap?.call(task),
+                    onPanStart: (details) {
+                      setState(() {
+                        _dragSourceId = task.id;
+                        // Initial position is exact touch point
+                        // TopLeft of node = center - w/2, h/2
+                        final nodeTopLeft = center - const Offset(w / 2, h / 2);
+                        _dragCurrentPos = nodeTopLeft + details.localPosition;
+                      });
+                    },
+                    onPanUpdate: (details) {
+                      setState(() {
+                        // Update relative to widget local position would be tricky if we don't track start.
+                        // Simpler: Just add delta to current.
+                        if (_dragCurrentPos != null) {
+                          _dragCurrentPos = _dragCurrentPos! + details.delta;
+                        }
+                      });
+                    },
+                    onPanEnd: (details) {
+                      // Hit test
+                      if (_dragSourceId != null && _dragCurrentPos != null) {
+                        final dropPos = _dragCurrentPos!;
+                        String? targetId;
+
+                        // Check all other nodes
+                        for (var entry in positions.entries) {
+                          if (entry.key == _dragSourceId) continue;
+
+                          final p = entry.value;
+                          // Simple bounding box check
+                          if (dropPos.dx >= p.dx - w / 2 &&
+                              dropPos.dx <= p.dx + w / 2 &&
+                              dropPos.dy >= p.dy - h / 2 &&
+                              dropPos.dy <= p.dy + h / 2) {
+                            targetId = entry.key;
+                            break;
+                          }
+                        }
+
+                        if (targetId != null) {
+                          widget.onDependencyAdded
+                              ?.call(_dragSourceId!, targetId);
+                        }
+                      }
+
+                      setState(() {
+                        _dragSourceId = null;
+                        _dragCurrentPos = null;
+                      });
+                    },
+                    child: widget.nodeBuilder
+                            ?.call(context, task, const Size(w, h)) ??
+                        _buildDefaultNode(context, task, const Size(w, h)),
+                  ),
                 );
               }),
             ],

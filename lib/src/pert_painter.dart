@@ -31,7 +31,15 @@ class PertPainter extends CustomPainter {
     required this.positions,
     this.linkColor = Colors.grey,
     this.linkWidth = 2.0,
+    this.dragSource,
+    this.dragTarget,
   });
+
+  /// The starting point of a dependency being dragged (e.g. center of source node).
+  final Offset? dragSource;
+
+  /// The current position of the drag pointer.
+  final Offset? dragTarget;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -52,6 +60,21 @@ class PertPainter extends CustomPainter {
 
         _drawArrow(canvas, startPos, endPos, paintLine);
       }
+    }
+
+    // Draw active drag line
+    if (dragSource != null && dragTarget != null) {
+      final paintDrag = Paint()
+        ..color = linkColor.withValues(alpha: 0.5)
+        ..strokeWidth = linkWidth
+        ..style = PaintingStyle.stroke
+        ..strokeCap = StrokeCap.round;
+
+      // Draw a dashed or simple line. For now, simple line.
+      canvas.drawLine(dragSource!, dragTarget!, paintDrag);
+
+      // Optional: Draw arrowhead at cursor
+      // _drawArrowHead(canvas, dragSource!, dragTarget!, paintDrag);
     }
   }
 
@@ -155,6 +178,9 @@ class PertPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant PertPainter oldDelegate) {
-    return oldDelegate.tasks != tasks || oldDelegate.positions != positions;
+    return oldDelegate.tasks != tasks ||
+        oldDelegate.positions != positions ||
+        oldDelegate.dragSource != dragSource ||
+        oldDelegate.dragTarget != dragTarget;
   }
 }

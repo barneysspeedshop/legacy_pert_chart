@@ -96,6 +96,45 @@ class _PertChartPageState extends State<PertChartPage> {
                 ? const Center(child: Text("Waiting for data..."))
                 : LegacyPertChartWidget(
                     tasks: tasks.isEmpty ? _getSampleTasks() : tasks,
+                    onDependencyAdded: (fromId, toId) {
+                      if (tasks.isEmpty) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text(
+                              'Cannot modify sample data. Please connect to server.',
+                            ),
+                          ),
+                        );
+                        return;
+                      }
+                      final fromName = tasks
+                          .firstWhere((t) => t.id == fromId)
+                          .name;
+                      final toName = tasks.firstWhere((t) => t.id == toId).name;
+
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            'Creating dependency: $fromName -> $toName',
+                          ),
+                        ),
+                      );
+
+                      viewModel.addDependency(fromId, toId);
+                    },
+                    onNodeTap: (task) {
+                      if (tasks.isEmpty) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text(
+                              'Cannot edit sample data. Please connect to server.',
+                            ),
+                          ),
+                        );
+                        return;
+                      }
+                      _showEditTaskDialog(context, task, viewModel);
+                    },
                     nodeBuilder: (context, task, size) {
                       if (task.name == 'Custom Node') {
                         return Container(
@@ -305,5 +344,53 @@ class _PertChartPageState extends State<PertChartPage> {
       ),
       const LegacyPertTask(id: '5', name: 'End', dependencyIds: ['4']),
     ];
+  }
+
+  void _showEditTaskDialog(
+    BuildContext context,
+    LegacyPertTask task,
+    PertViewModel viewModel,
+  ) {
+    final durationController = TextEditingController(
+      text: task.duration?.inHours.toString() ?? '0',
+    );
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Edit Task: ${task.name}'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                controller: durationController,
+                decoration: const InputDecoration(
+                  labelText: 'Duration (Hours)',
+                  suffixText: 'h',
+                ),
+                keyboardType: TextInputType.number,
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Cancel'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                final hours = int.tryParse(durationController.text);
+                if (hours != null) {
+                  viewModel.updateTaskDuration(task.id, Duration(hours: hours));
+                }
+                Navigator.of(context).pop();
+              },
+              child: const Text('Save'),
+            ),
+          ],
+        );
+      },
+    );
   }
 }

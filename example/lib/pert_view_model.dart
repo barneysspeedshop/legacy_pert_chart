@@ -73,13 +73,61 @@ class PertViewModel extends ChangeNotifier {
   }
 
   void disconnect() {
-    _client?.dispose(); // Changed from disconnect() to dispose()
+    _client?.dispose();
     _client = null;
     _isConnected = false;
     _ganttTasks.clear();
     _dependencies.clear();
     _rebuildPertTasks();
     notifyListeners();
+  }
+
+  Future<void> addDependency(String fromId, String toId) async {
+    if (!_isConnected || _client == null) return;
+
+    // Check if dependency already exists locally
+    final exists = _dependencies.any(
+      (d) => d.predecessorTaskId == fromId && d.successorTaskId == toId,
+    );
+    if (exists) return;
+
+    final op = Operation(
+      type: 'INSERT_DEPENDENCY',
+      data: {
+        'predecessorTaskId': fromId,
+        'successorTaskId': toId,
+        'type': 'finishToStart',
+        'dependency_type': 'finishToStart', // Redundant for compatibility
+      },
+      timestamp: Hlc.fromDate(DateTime.now(), 'user'),
+      actorId: 'user',
+    );
+
+    // Optimistic Update
+    _handleOperation(op);
+
+    _client!.sendOperation(op);
+  }
+
+  Future<void> updateTaskDuration(String taskId, Duration duration) async {
+    if (!_isConnected || _client == null) return;
+
+    final task = _ganttTasks[taskId];
+    if (task == null) return;
+
+    final newEnd = task.start.add(duration);
+
+    final op = Operation(
+      type: 'UPDATE_TASK',
+      data: {'id': taskId, 'end': newEnd.millisecondsSinceEpoch},
+      timestamp: Hlc.fromDate(DateTime.now(), 'user'),
+      actorId: 'user',
+    );
+
+    // Optimistic Update
+    _handleOperation(op);
+
+    _client!.sendOperation(op);
   }
 
   void _handleOperation(Operation op) {
@@ -117,17 +165,44 @@ class PertViewModel extends ChangeNotifier {
             ? data['data'] as Map<String, dynamic>
             : data;
 
+        final id = taskData['id'];
+        if (id == null) break;
+
+        final existing = _ganttTasks[id];
+
+        // Merge logic: Use new value if present, otherwise existing, otherwise default
+        final name = taskData['name'] ?? existing?.name ?? 'Unnamed';
+
+        DateTime start;
+        if (taskData['start'] != null || taskData['start_date'] != null) {
+          start = _parseDate(taskData['start'] ?? taskData['start_date']);
+        } else {
+          start = existing?.start ?? DateTime.now();
+        }
+
+        DateTime end;
+        if (taskData['end'] != null || taskData['end_date'] != null) {
+          end = _parseDate(taskData['end'] ?? taskData['end_date']);
+        } else {
+          end = existing?.end ?? DateTime.now().add(const Duration(days: 1));
+        }
+
+        final rowId =
+            taskData['rowId'] ??
+            taskData['resourceId'] ??
+            existing?.rowId ??
+            'default_row';
+        final parentId = taskData['parentId'] ?? existing?.parentId;
+        final resourceId = taskData['resourceId'] ?? existing?.resourceId;
+
         final task = LegacyGanttTask(
-          id: taskData['id'],
-          rowId:
-              taskData['rowId'] ??
-              taskData['resourceId'] ??
-              'default_row', // Added required rowId
-          name: taskData['name'] ?? 'Unnamed',
-          start: _parseDate(taskData['start'] ?? taskData['start_date']),
-          end: _parseDate(taskData['end'] ?? taskData['end_date']),
-          parentId:
-              taskData['parentId'], // Map parentId specifically for hierarchy
+          id: id,
+          rowId: rowId,
+          name: name,
+          start: start,
+          end: end,
+          parentId: parentId,
+          resourceId: resourceId,
         );
         _ganttTasks[task.id] = task;
         changed = true;
@@ -151,18 +226,27 @@ class PertViewModel extends ChangeNotifier {
         final succId = data['successorTaskId'] ?? data['successor_task_id'];
 
         if (predId != null && succId != null) {
-          final dep = LegacyGanttTaskDependency(
-            predecessorTaskId: predId,
-            successorTaskId: succId,
-            type: DependencyType.values.firstWhere(
-              (e) =>
-                  e.name.toLowerCase() ==
-                  data['dependency_type'].toString().toLowerCase(),
-              orElse: () => DependencyType.finishToStart,
-            ),
+          // Prevent duplicates
+          final exists = _dependencies.any(
+            (d) => d.predecessorTaskId == predId && d.successorTaskId == succId,
           );
-          _dependencies.add(dep);
-          changed = true;
+
+          if (!exists) {
+            final dep = LegacyGanttTaskDependency(
+              predecessorTaskId: predId,
+              successorTaskId: succId,
+              type: DependencyType.values.firstWhere(
+                (e) =>
+                    e.name.toLowerCase() ==
+                    (data['dependency_type'] ?? data['type'])
+                        .toString()
+                        .toLowerCase(),
+                orElse: () => DependencyType.finishToStart,
+              ),
+            );
+            _dependencies.add(dep);
+            changed = true;
+          }
         } else {
           // Skipped dependency due to null IDs
         }
