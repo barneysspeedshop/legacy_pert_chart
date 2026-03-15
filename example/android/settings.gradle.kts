@@ -1,3 +1,4 @@
+rootProject.name = "legacy_pert_chart_example_android"
 pluginManagement {
     val flutterSdkPath =
         run {
