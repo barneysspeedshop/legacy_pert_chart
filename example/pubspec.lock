@@ -246,7 +246,7 @@ packages:
       path: "../../legacy_timeline_scrubber"
       relative: true
     source: path
-    version: "2.0.1"
+    version: "3.0.0"
   lints:
     dependency: transitive
     description:
