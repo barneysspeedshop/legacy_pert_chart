@@ -8,22 +8,26 @@ void main() {
     // 0 -> 2 (Redundant)
     final source = [
       LegacyGanttTaskDependency(
-          predecessorTaskId: '0',
-          successorTaskId: '1',
-          type: DependencyType.finishToStart),
+        predecessorTaskId: '0',
+        successorTaskId: '1',
+        type: DependencyType.finishToStart,
+      ),
       LegacyGanttTaskDependency(
-          predecessorTaskId: '1',
-          successorTaskId: '2',
-          type: DependencyType.finishToStart),
+        predecessorTaskId: '1',
+        successorTaskId: '2',
+        type: DependencyType.finishToStart,
+      ),
       LegacyGanttTaskDependency(
-          predecessorTaskId: '0',
-          successorTaskId: '2',
-          type: DependencyType.finishToStart),
+        predecessorTaskId: '0',
+        successorTaskId: '2',
+        type: DependencyType.finishToStart,
+      ),
     ];
 
     // Local implementation of the logic found in PertViewModel for testing purposes
     List<LegacyGanttTaskDependency> removeTransitiveRedundancies(
-        List<LegacyGanttTaskDependency> params) {
+      List<LegacyGanttTaskDependency> params,
+    ) {
       final adj = <String, Set<String>>{};
       for (var dep in params) {
         if (dep.type != DependencyType.contained) {
@@ -36,7 +40,10 @@ void main() {
       final toRemove = <LegacyGanttTaskDependency>{};
 
       bool canReach(
-          String start, String target, Map<String, Set<String>> graph) {
+        String start,
+        String target,
+        Map<String, Set<String>> graph,
+      ) {
         final queue = <String>[start];
         final visited = <String>{start};
 
@@ -76,16 +83,16 @@ void main() {
 
     expect(result.length, 2);
     expect(
-        result
-            .any((d) => d.predecessorTaskId == '0' && d.successorTaskId == '2'),
-        isFalse);
+      result.any((d) => d.predecessorTaskId == '0' && d.successorTaskId == '2'),
+      isFalse,
+    );
     expect(
-        result
-            .any((d) => d.predecessorTaskId == '0' && d.successorTaskId == '1'),
-        isTrue);
+      result.any((d) => d.predecessorTaskId == '0' && d.successorTaskId == '1'),
+      isTrue,
+    );
     expect(
-        result
-            .any((d) => d.predecessorTaskId == '1' && d.successorTaskId == '2'),
-        isTrue);
+      result.any((d) => d.predecessorTaskId == '1' && d.successorTaskId == '2'),
+      isTrue,
+    );
   });
 }

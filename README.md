@@ -51,11 +51,11 @@ class MyPertChart extends StatelessWidget {
 }
 ```
 
-## Enterprise Integration
+## Synchronization Integration
 
 This package is part of the **GanttSync Ecosystem**.
 
 *   **FOSS Core**: The UI and layout logic are 100% free and open source (MIT). **We Don't Gate Pixels.**
-*   **Real-Time Sync**: Connect this chart to **GanttSync** for offline-first, real-time collaboration. The Enterprise edition provides "Sync-Aware Controllers" that handle live updates, multi-user cursors, and instant critical path recalculation across the network.
+*   **Real-Time Sync**: Connect this chart to **GanttSync** for offline-first, real-time collaboration. The MIT-licensed ecosystem provides "Sync-Aware Controllers" that handle live updates, multi-user cursors, and instant critical path recalculation across the network.
 
 [Learn more about GanttSync](https://gantt-sync.com)

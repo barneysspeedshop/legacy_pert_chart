@@ -30,7 +30,8 @@ class PertLayout {
   /// * `positions`: A map of Task ID to the center [Offset] of the node.
   /// * `size`: The total [Size] of the diagram based on the computed bounding box.
   ({Map<String, Offset> positions, Size size}) calculateLayout(
-      List<LegacyPertTask> tasks) {
+    List<LegacyPertTask> tasks,
+  ) {
     if (tasks.isEmpty) {
       return (positions: {}, size: Size.zero);
     }
@@ -103,7 +104,7 @@ class PertLayout {
           var extents = laneRowExtents[lane] ?? (minRow: 0, maxRow: 0);
           laneRowExtents[lane] = (
             minRow: min(extents.minRow, row),
-            maxRow: max(extents.maxRow, row)
+            maxRow: max(extents.maxRow, row),
           );
         }
       }
@@ -133,8 +134,10 @@ class PertLayout {
           currentY + 50.0 + row0Offset + nodeHeight / 2; // +50 padding
 
       laneCenterY[lane] = center;
-      laneHeights[lane] =
-          max(height + 100.0, nodeHeight + 100.0); // Ensure min height
+      laneHeights[lane] = max(
+        height + 100.0,
+        nodeHeight + 100.0,
+      ); // Ensure min height
 
       currentY += laneHeights[lane]!;
     }
@@ -165,7 +168,9 @@ class PertLayout {
   }
 
   Map<String, int> _calculateRanks(
-      List<LegacyPertTask> tasks, Map<String, LegacyPertTask> taskMap) {
+    List<LegacyPertTask> tasks,
+    Map<String, LegacyPertTask> taskMap,
+  ) {
     final ranks = <String, int>{};
     final visited = <String>{};
     final visiting = <String>{};

@@ -8,8 +8,8 @@ import 'package:legacy_pert_chart/src/pert_painter.dart';
 /// * [context]: The build context.
 /// * [task]: The task being rendered.
 /// * [size]: The standard size of the node (width, height) allocated by the layout.
-typedef PertNodeBuilder = Widget? Function(
-    BuildContext context, LegacyPertTask task, Size size);
+typedef PertNodeBuilder =
+    Widget? Function(BuildContext context, LegacyPertTask task, Size size);
 
 /// A widget that displays a PERT (Program Evaluation and Review Technique) chart.
 ///
@@ -127,8 +127,9 @@ class _LegacyPertChartWidgetState extends State<LegacyPertChartWidget> {
                     positions: positions,
                     linkColor: effectiveLinkColor,
                     linkWidth: widget.linkWidth ?? 2.0,
-                    dragSource:
-                        _dragSourceId != null ? positions[_dragSourceId] : null,
+                    dragSource: _dragSourceId != null
+                        ? positions[_dragSourceId]
+                        : null,
                     dragTarget: _dragCurrentPos,
                   ),
                 ),
@@ -188,8 +189,10 @@ class _LegacyPertChartWidgetState extends State<LegacyPertChartWidget> {
                         }
 
                         if (targetId != null) {
-                          widget.onDependencyAdded
-                              ?.call(_dragSourceId!, targetId);
+                          widget.onDependencyAdded?.call(
+                            _dragSourceId!,
+                            targetId,
+                          );
                         }
                       }
 
@@ -198,8 +201,12 @@ class _LegacyPertChartWidgetState extends State<LegacyPertChartWidget> {
                         _dragCurrentPos = null;
                       });
                     },
-                    child: widget.nodeBuilder
-                            ?.call(context, task, const Size(w, h)) ??
+                    child:
+                        widget.nodeBuilder?.call(
+                          context,
+                          task,
+                          const Size(w, h),
+                        ) ??
                         _buildDefaultNode(context, task, const Size(w, h)),
                   ),
                 );
@@ -212,7 +219,10 @@ class _LegacyPertChartWidgetState extends State<LegacyPertChartWidget> {
   }
 
   Widget _buildDefaultNode(
-      BuildContext context, LegacyPertTask task, Size size) {
+    BuildContext context,
+    LegacyPertTask task,
+    Size size,
+  ) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
 
@@ -232,7 +242,8 @@ class _LegacyPertChartWidgetState extends State<LegacyPertChartWidget> {
         children: [
           Text(
             task.name,
-            style: theme.textTheme.bodyMedium?.copyWith(
+            style:
+                theme.textTheme.bodyMedium?.copyWith(
                   color: textColor,
                   fontWeight: FontWeight.bold,
                 ) ??
@@ -244,10 +255,14 @@ class _LegacyPertChartWidgetState extends State<LegacyPertChartWidget> {
           if (task.duration != null)
             Text(
               '${task.duration!.inHours}h',
-              style: theme.textTheme.bodySmall
-                      ?.copyWith(color: textColor.withValues(alpha: 0.8)) ??
+              style:
+                  theme.textTheme.bodySmall?.copyWith(
+                    color: textColor.withValues(alpha: 0.8),
+                  ) ??
                   TextStyle(
-                      color: textColor.withValues(alpha: 0.8), fontSize: 12),
+                    color: textColor.withValues(alpha: 0.8),
+                    fontSize: 12,
+                  ),
               textAlign: TextAlign.center,
             ),
         ],

@@ -1,3 +1,8 @@
+## 0.2.0
+
+* **BREAKING**: Align with legacy_gantt_chart ^9.0.0 and legacy_gantt_protocol ^3.0.0. Require Dart 3.10 and Flutter 3.38 or newer.
+* PERT visualization remains client-side and does not depend on the experimental Rust scheduler.
+
 ## 0.1.0
 
 * **FEATURE**: Added interactivity support! You can now drag between nodes to create dependencies (`onDependencyAdded`).
