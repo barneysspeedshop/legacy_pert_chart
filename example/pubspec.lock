@@ -232,7 +232,7 @@ packages:
       path: "../../legacy_gantt_protocol"
       relative: true
     source: path
-    version: "3.0.0"
+    version: "3.0.1"
   legacy_pert_chart:
     dependency: "direct main"
     description:

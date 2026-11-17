@@ -16,7 +16,7 @@ dependencies:
   provider: ^6.1.5+1
   legacy_gantt_chart: ^9.0.0
   legacy_timeline_scrubber: ^3.0.0
-  legacy_gantt_protocol: ^3.0.0
+  legacy_gantt_protocol: ^3.0.1
 
 dev_dependencies:
   flutter_test:

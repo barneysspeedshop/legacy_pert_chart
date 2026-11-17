@@ -14,7 +14,7 @@ dependencies:
   flutter:
     sdk: flutter
   legacy_gantt_chart: ^9.0.0
-  legacy_gantt_protocol: ^3.0.0
+  legacy_gantt_protocol: ^3.0.1
 
 dev_dependencies:
   test: any
