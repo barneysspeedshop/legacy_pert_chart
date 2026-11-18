@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:legacy_pert_chart/src/models/pert_task.dart';
 import 'package:legacy_pert_chart/src/pert_layout.dart';
 import 'package:legacy_pert_chart/src/pert_painter.dart';
@@ -8,8 +8,11 @@ import 'package:legacy_pert_chart/src/pert_painter.dart';
 /// * [context]: The build context.
 /// * [task]: The task being rendered.
 /// * [size]: The standard size of the node (width, height) allocated by the layout.
-typedef PertNodeBuilder =
-    Widget? Function(BuildContext context, LegacyPertTask task, Size size);
+typedef PertNodeBuilder = Widget? Function(
+  BuildContext context,
+  LegacyPertTask task,
+  Size size,
+);
 
 /// A widget that displays a PERT (Program Evaluation and Review Technique) chart.
 ///

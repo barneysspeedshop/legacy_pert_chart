@@ -1,7 +1,8 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:legacy_pert_chart/legacy_pert_chart.dart';
 import 'package:legacy_gantt_chart/legacy_gantt_chart.dart';
 import 'package:provider/provider.dart';
+
 import 'pert_view_model.dart';
 
 void main() {
@@ -17,6 +18,7 @@ class MyApp extends StatelessWidget {
       create: (_) => PertViewModel(),
       child: MaterialApp(
         title: 'Legacy PERT Chart Demo',
+        localizationsDelegates: GlobalMaterialLocalizations.delegates,
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
           useMaterial3: true,

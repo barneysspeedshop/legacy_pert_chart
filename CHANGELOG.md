@@ -1,3 +1,8 @@
+## 0.3.0
+
+* **BREAKING**: Migrate Material widgets and theme types to the official `material_ui` package. Require Dart 3.13 and Flutter 3.47 or newer.
+* **BREAKING**: Align with `legacy_gantt_chart: ^10.0.0` while retaining `legacy_gantt_protocol: ^3.0.1`.
+
 ## 0.2.0
 
 * **BREAKING**: Align with legacy_gantt_chart ^9.0.0 and legacy_gantt_protocol ^3.0.1. Require Dart 3.10 and Flutter 3.38 or newer.

@@ -1,5 +1,6 @@
 import 'dart:async';
-import 'package:flutter/material.dart';
+
+import 'package:flutter/foundation.dart' show ChangeNotifier;
 import 'package:legacy_gantt_chart/legacy_gantt_chart.dart';
 import 'package:legacy_pert_chart/legacy_pert_chart.dart';
 
