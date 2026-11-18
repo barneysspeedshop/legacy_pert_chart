@@ -18,13 +18,14 @@ Add the package to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  legacy_pert_chart: ^0.0.1
+  legacy_pert_chart: ^0.3.0
+  material_ui: ^1.11.1
 ```
 
 ## Usage
 
 ```dart
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:legacy_pert_chart/legacy_pert_chart.dart';
 import 'package:legacy_gantt_chart/legacy_gantt_chart.dart';
 
@@ -50,6 +51,10 @@ class MyPertChart extends StatelessWidget {
   }
 }
 ```
+
+## Material UI migration
+
+Version 0.3.0 is a breaking release for Flutter 3.47 and later. It requires Dart 3.13 or newer, uses the official `material_ui: ^1.11.1` package for Material widgets and theme types, and depends on `legacy_gantt_chart: ^10.0.0`. Update application imports from `package:flutter/material.dart` to `package:material_ui/material_ui.dart`; migrated applications should set `localizationsDelegates` to `GlobalMaterialLocalizations.delegates`. Callers passing Material colors or themes through custom builders must use the `material_ui` types exposed by their Flutter application.
 
 ## Synchronization Integration
 
