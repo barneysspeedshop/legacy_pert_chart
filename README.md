@@ -54,7 +54,7 @@ class MyPertChart extends StatelessWidget {
 
 ## Material UI migration
 
-Version 0.3.0 is a breaking release for Flutter 3.47 and later. It requires Dart 3.13 or newer, uses the official `material_ui: ^1.11.1` package for Material widgets and theme types, and depends on `legacy_gantt_chart: ^10.0.0`. Update application imports from `package:flutter/material.dart` to `package:material_ui/material_ui.dart`; migrated applications should set `localizationsDelegates` to `GlobalMaterialLocalizations.delegates`. Callers passing Material colors or themes through custom builders must use the `material_ui` types exposed by their Flutter application.
+Version 0.4.0 requires chart 11 and protocol 4. It retains the Material migration introduced in 0.3.0 for Flutter 3.47 and later. It requires Dart 3.13 or newer, uses the official `material_ui: ^1.11.1` package for Material widgets and theme types, and depends on `legacy_gantt_chart: ^11.0.0`. Update application imports from `package:flutter/material.dart` to `package:material_ui/material_ui.dart`; migrated applications should set `localizationsDelegates` to `GlobalMaterialLocalizations.delegates`. Callers passing Material colors or themes through custom builders must use the `material_ui` types exposed by their Flutter application.
 
 ## Synchronization Integration
 
