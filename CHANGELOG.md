@@ -1,3 +1,7 @@
+## 0.4.0
+
+* **BREAKING**: Require `legacy_gantt_chart: ^11.0.0` and `legacy_gantt_protocol: ^4.0.0` to support the coordinated offline synchronization release. PERT layout behavior is unchanged.
+
 ## 0.3.0
 
 * **BREAKING**: Migrate Material widgets and theme types to the official `material_ui` package. Require Dart 3.13 and Flutter 3.47 or newer.
