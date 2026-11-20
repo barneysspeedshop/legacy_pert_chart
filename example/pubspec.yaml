@@ -16,9 +16,9 @@ dependencies:
   legacy_pert_chart:
     path: ../
   provider: ^6.1.5+1
-  legacy_gantt_chart: ^10.0.0
+  legacy_gantt_chart: ^11.0.0
   legacy_timeline_scrubber: ^4.0.0
-  legacy_gantt_protocol: ^3.0.1
+  legacy_gantt_protocol: ^4.0.0
 
 dev_dependencies:
   flutter_test:
