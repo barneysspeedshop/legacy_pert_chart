@@ -59,8 +59,7 @@ class LegacyPertChartWidget extends StatefulWidget {
 
   /// Callback when a user drags a connection from one node to another.
   ///
-  /// * [fromId]: The ID of the source task.
-  /// * [toId]: The ID of the target task.
+  /// The callback receives the source and target task IDs.
   final void Function(String fromId, String toId)? onDependencyAdded;
 
   /// Callback when a user taps on a node.
