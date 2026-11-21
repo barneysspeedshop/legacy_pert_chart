@@ -12,7 +12,7 @@ dependencies:
   flutter:
     sdk: flutter
   material_ui: ^1.11.1
-  cupertino_icons: ^1.0.8
+  cupertino_icons: ^2.0.0
   legacy_pert_chart:
     path: ../
   provider: ^6.1.5+1

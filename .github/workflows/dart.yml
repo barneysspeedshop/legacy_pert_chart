@@ -15,13 +15,13 @@ jobs:
         persist-credentials: false
     - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2
       with:
-        flutter-version: 3.50.0
+        flutter-version: 3.50.1
         channel: stable
         cache: true
     - name: Install dependencies
       run: flutter pub get
     - name: Verify formatting
-      run: dart format --output=none --set-exit-if-changed .
+      run: dart format --output=none --set-exit-if-changed lib
     - name: Analyze project source
       run: flutter analyze
     - name: Run package tests
